@@ -1,0 +1,215 @@
+import type { 
+  Faculty, 
+  Department, 
+  Room, 
+  AnonymousPatient, 
+  ReviewActionLog 
+} from '../types';
+
+export const mockFaculties: Faculty[] = [
+  {
+    id: 'fac-1',
+    name: 'Psixologiya fakulteti',
+    dean: 'Prof. Otabek Vohidov',
+    departmentsCount: 4,
+    studentsCount: 620,
+    description: 'Universitetning amaliy psixologiya, klinik diagnostika va psixoterapiya bo‘yicha tayanch fakulteti.',
+  },
+  {
+    id: 'fac-2',
+    name: 'Pedagogika va gumanitar fanlar fakulteti',
+    dean: 'Dots. Farida Umarova',
+    departmentsCount: 3,
+    studentsCount: 480,
+    description: 'Maxsus pedagogika, defektologiya va umumiy psixologik ta’lim yo‘nalishlari.',
+  }
+];
+
+export const mockDepartments: Department[] = [
+  {
+    id: 'dep-1',
+    name: 'Klinik va amaliy psixologiya kafedrasi',
+    facultyId: 'fac-1',
+    facultyName: 'Psixologiya fakulteti',
+    headOfDepartment: 'Prof. Dilorom Karimova',
+    professorsCount: 12,
+    description: 'Klinik psixoterapiya, KBT, psixodiagnostika va konsultatsiya xonalari faoliyatini muvofiqlashtiradi.',
+  },
+  {
+    id: 'dep-2',
+    name: 'Umumiy va amaliy psixologiya kafedrasi',
+    facultyId: 'fac-1',
+    facultyName: 'Psixologiya fakulteti',
+    headOfDepartment: 'Prof. Otabek Vohidov',
+    professorsCount: 14,
+    description: 'Umumiy psixologiya nazariyasi, eksperimental psixologiya laboratoriyalari.',
+  },
+  {
+    id: 'dep-3',
+    name: 'Ijtimoiy psixologiya kafedrasi',
+    facultyId: 'fac-1',
+    facultyName: 'Psixologiya fakulteti',
+    headOfDepartment: 'Dots. Jamshid Aliyev',
+    professorsCount: 9,
+    description: 'Guruh dinamikasi, oilaviy konsultatsiya va mediatorlik yo‘nalishlari.',
+  },
+  {
+    id: 'dep-4',
+    name: 'Yosh davrlari psixologiyasi kafedrasi',
+    facultyId: 'fac-1',
+    facultyName: 'Psixologiya fakulteti',
+    headOfDepartment: 'Dr. Nigora Toirova',
+    professorsCount: 8,
+    description: 'Bolalar va o‘smirlar psixodiagnostikasi, korreksion psixologiya va art-terapiya.',
+  }
+];
+
+export const mockRooms: Room[] = [
+  {
+    id: 'room-203',
+    name: 'Konsultatsiya xonasi A (Klinik psixologiya)',
+    roomNumber: '203-xona',
+    floor: 2,
+    faculty: 'Psixologiya fakulteti',
+    department: 'Klinik va amaliy psixologiya kafedrasi',
+    purpose: 'Individual konsultatsiya va KBT seanslari',
+    cameraCount: 2,
+    status: 'Faol',
+  },
+  {
+    id: 'room-201',
+    name: 'Individual terapiya xonasi B',
+    roomNumber: '201-xona',
+    floor: 2,
+    faculty: 'Psixologiya fakulteti',
+    department: 'Klinik va amaliy psixologiya kafedrasi',
+    purpose: 'Birlamchi diagnostika va anamnez suhbatlari',
+    cameraCount: 2,
+    status: 'Faol',
+  },
+  {
+    id: 'room-305',
+    name: 'Guruh terapiyasi va superviziya zali',
+    roomNumber: '305-xona',
+    floor: 3,
+    faculty: 'Psixologiya fakulteti',
+    department: 'Ijtimoiy psixologiya kafedrasi',
+    purpose: 'Guruh psixoterapiyasi, treninglar va bahs-munozaralar',
+    cameraCount: 3,
+    status: 'Bo‘sh',
+  },
+  {
+    id: 'room-108',
+    name: 'Bolalar psixoterapiyasi va Art-terapiya xonasi',
+    roomNumber: '108-xona',
+    floor: 1,
+    faculty: 'Psixologiya fakulteti',
+    department: 'Yosh davrlari psixologiyasi kafedrasi',
+    purpose: 'Bolalar bilan o‘yin terapiyasi va art-terapiya',
+    cameraCount: 2,
+    status: 'Bo‘sh',
+  },
+  {
+    id: 'room-204',
+    name: 'Psixodiagnostika va eksperimental laboratoriya',
+    roomNumber: '204-xona',
+    floor: 2,
+    faculty: 'Psixologiya fakulteti',
+    department: 'Umumiy va amaliy psixologiya kafedrasi',
+    purpose: 'Apparatli psixodiagnostika va biofeedback',
+    cameraCount: 1,
+    status: 'Texnik xizmat',
+  }
+];
+
+export const mockPatients: AnonymousPatient[] = [
+  {
+    id: 'pt-1',
+    patientCode: 'PT-9012',
+    ageGroup: 'Kattalar (26 yosh)',
+    totalSessions: 4,
+    firstVisitDate: '12 Yanvar, 2026',
+    lastVisitDate: '18 Fevral, 2026',
+    primaryTopic: 'Umumiy xavotir sindromi (GAD)',
+    assignedProfessor: 'Prof. Dilorom Karimova',
+    status: 'Faol',
+  },
+  {
+    id: 'pt-2',
+    patientCode: 'PT-7721',
+    ageGroup: 'Kattalar (32 yosh)',
+    totalSessions: 6,
+    firstVisitDate: '02 Noyabr, 2025',
+    lastVisitDate: '15 Yanvar, 2026',
+    primaryTopic: 'Depressiv holat va emotsional so‘nish',
+    assignedProfessor: 'Prof. Dilorom Karimova',
+    status: 'Faol',
+  },
+  {
+    id: 'pt-3',
+    patientCode: 'PT-4051',
+    ageGroup: 'Yoshlar (19 yosh)',
+    totalSessions: 2,
+    firstVisitDate: '05 Fevral, 2026',
+    lastVisitDate: '22 Fevral, 2026',
+    primaryTopic: 'Imtihon oldi xavotiri va stress',
+    assignedProfessor: 'Dr. Nigora Toirova',
+    status: 'Faol',
+  },
+  {
+    id: 'pt-4',
+    patientCode: 'PT-3310',
+    ageGroup: 'Yoshlar (22 yosh)',
+    totalSessions: 3,
+    firstVisitDate: '10 Fevral, 2026',
+    lastVisitDate: '24 Fevral, 2026',
+    primaryTopic: 'OKB va gigiyena xavotirlari',
+    assignedProfessor: 'Prof. Dilorom Karimova',
+    status: 'Faol',
+  },
+  {
+    id: 'pt-5',
+    patientCode: 'PT-1190',
+    ageGroup: 'Kattalar (28 yosh)',
+    totalSessions: 8,
+    firstVisitDate: '15 Oktyabr, 2025',
+    lastVisitDate: '20 Fevral, 2026',
+    primaryTopic: 'Bolalik travmalari va hissiy bloklar',
+    assignedProfessor: 'Dots. Jamshid Aliyev',
+    status: 'Yakunlangan',
+  },
+  {
+    id: 'pt-6',
+    patientCode: 'PT-6640',
+    ageGroup: 'Talaba yoshlar (20 yosh)',
+    totalSessions: 1,
+    firstVisitDate: '26 Fevral, 2026',
+    lastVisitDate: '26 Fevral, 2026',
+    primaryTopic: 'Ijtimoiy fobiya va odamlar oldida so‘zlash',
+    assignedProfessor: 'Prof. Dilorom Karimova',
+    status: 'Kutilmoqda',
+  }
+];
+
+export const mockReviewLogs: ReviewActionLog[] = [
+  {
+    id: 'log-1',
+    videoId: 'vid-101',
+    videoTitle: 'Anxiety bilan ishlash (Xavotir buzilishida KBT yondashuvi)',
+    professorName: 'Prof. Dilorom Karimova',
+    action: 'Approved',
+    date: '20 Fevral, 2026',
+    comment: 'KBT metodikasi to‘liq standartlarga mos, bemor shaxsiy daxlsizligi to‘liq ta’minlangan.',
+    supervisorName: 'Dr. Nigora Toirova',
+  },
+  {
+    id: 'log-2',
+    videoId: 'vid-105',
+    videoTitle: 'Bolalik travmalari bilan ishlashda kognitiv qayta tuzish',
+    professorName: 'Prof. Dilorom Karimova',
+    action: 'Changes Requested',
+    date: '21 Fevral, 2026',
+    comment: 'O‘quv maqsadlarida talabalar uchun ko‘rsatmalarni kengaytirish va 15-daqiqadagi vizualizatsiya usuliga qo‘shimcha izoh kiritish so‘raladi.',
+    supervisorName: 'Dr. Nigora Toirova',
+  }
+];

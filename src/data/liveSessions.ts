@@ -1,0 +1,71 @@
+import type { LiveSession } from '../types';
+
+export const mockLiveSessions: LiveSession[] = [
+  {
+    id: 'session-203',
+    cameraId: 'cam-203',
+    roomNumber: '203-xona',
+    title: 'Anxiety bilan ishlash: Birlamchi kognitiv qayta baholash',
+    activityType: 'Individual konsultatsiya',
+    psychologicalMethod: 'KBT (Kognitiv-xulq-atvor terapiyasi)',
+    professorName: 'Prof. Dilorom Karimova',
+    professorAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    professorTitle: 'Psixologiya fanlari doktori, Professor',
+    patientCode: 'PT-9012',
+    startedAt: '10:32',
+    viewerCount: 18,
+    description: 'Ushbu amaliy seansda umumiy xavotir sindromi (GAD) bo‘yicha birlamchi intervensiya o‘tkazilmoqda. Talabalar sokratik savol berish tartibi va avtomatik fikrlarni aniqlash texnikasini kuzatadilar.',
+    sessionObjectives: [
+      'Avtomatik negativ fikrlarni (ANF) aniqlash va qayd etish',
+      'Kognitiv xatoliklarni tahlil qilish (katastrofizatsiya)',
+      'Hissiy holat va tana reaksiyalari o‘rtasidagi bog‘liqlikni ko‘rsatish',
+      'Uy vazifasi sifatida xatti-harakatlar kundaligini tavsiya etish'
+    ],
+    cameraState: 'Live',
+    relatedCaseId: 'case-024',
+  },
+  {
+    id: 'session-201',
+    cameraId: 'cam-201',
+    roomNumber: '201-xona',
+    title: 'Sokratik muloqot va e’tiqodlarni tekshirish amaliyoti',
+    activityType: 'Individual konsultatsiya',
+    psychologicalMethod: 'Ratsional-emotiv xulq-atvor (REBT)',
+    professorName: 'Dots. Jamshid Aliyev',
+    professorAvatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80',
+    professorTitle: 'Psixologiya fanlari nomzodi, Dotsent',
+    patientCode: 'PT-4051',
+    startedAt: '10:45',
+    viewerCount: 12,
+    description: 'Irratsional e’tiqodlarni («Men hammaga yoqishim shart») dekonstruksiya qilish va muqobil sog‘lom fikrlash modellarini ishlab chiqish jarayoni.',
+    sessionObjectives: [
+      'Mijozning mutlaq talablarini aniqlash («...kerak», «...majburman»)',
+      'Mantiqiy ziddiyatlarni ochib berish',
+      'Moslashuvchan fikrlashni shakllantirish'
+    ],
+    cameraState: 'Live',
+    relatedCaseId: 'case-018',
+  },
+  {
+    id: 'session-305',
+    cameraId: 'cam-305',
+    roomNumber: '305-xona',
+    title: 'Guruh terapiyasida faol tinglash va empatiya mashg‘uloti',
+    activityType: 'Guruh psixoterapiyasi',
+    psychologicalMethod: 'Gumanistik va Gestalt yondashuv',
+    professorName: 'Dr. Nigora Toirova',
+    professorAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+    professorTitle: 'PhD, Bolalar va o‘smirlar psixologi',
+    patientCode: 'PT-7721',
+    startedAt: '11:00',
+    viewerCount: 24,
+    description: 'Guruh dinamikasini boshqarish, «Shu yerda va hozir» tamoyiliga tayangan holda hissiy ifodalarni rag‘batlantirish.',
+    sessionObjectives: [
+      'Guruhda ishonchli muhitni shakllantirish',
+      'Empatik aks ettirish (reflective listening) mashqi',
+      'Guruh qarshiliklarini (resistance) yengish'
+    ],
+    cameraState: 'Recording',
+    relatedCaseId: 'case-031',
+  },
+];
