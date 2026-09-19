@@ -1,0 +1,297 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  STUDENT
+  PROFESSOR
+  SUPERVISOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+}
+
+enum CameraState {
+  ONLINE
+  LIVE
+  RECORDING
+  OFFLINE
+  PREPARING
+  STREAM_ERROR
+}
+
+enum VideoState {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  CHANGES_REQUESTED
+  APPROVED
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum CaseDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model User {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  passwordHash     String
+  fullName         String
+  role             UserRole     @default(STUDENT)
+  roleLabel        String       @default("Talaba")
+  avatarUrl        String       @default("")
+  faculty          String       @default("Psixologiya fakulteti")
+  department       String       @default("Klinik psixologiya kafedrasi")
+  status           UserStatus   @default(ACTIVE)
+
+  // Student details
+  academicYear     String?
+  groupNumber      String?
+  studentId        String?
+
+  // Professor details
+  academicTitle    String?
+  specialization   String?
+  licenseNumber    String?
+  capabilities     String[]     @default([])
+
+  // Supervisor details
+  supervisionArea  String?
+
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  refreshTokens    RefreshToken[]
+  notifications    Notification[]
+  videos           Video[]
+  materials        Material[]
+  reviews          ReviewLog[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Faculty {
+  id               String       @id @default(uuid())
+  name             String
+  code             String       @unique
+  deanName         String
+  departmentsCount Int          @default(0)
+  studentsCount    Int          @default(0)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  departments      Department[]
+}
+
+model Department {
+  id              String    @id @default(uuid())
+  facultyId       String
+  faculty         Faculty   @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  name            String
+  code            String    @unique
+  headName        String
+  professorsCount Int       @default(0)
+  roomsCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  rooms           Room[]
+}
+
+model Room {
+  id           String      @id @default(uuid())
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  roomNumber   String      @unique
+  name         String
+  floor        Int         @default(1)
+  type         String      @default("Individual konsultatsiya")
+  capacity     Int         @default(2)
+  isOccupied   Boolean     @default(false)
+  status       String      @default("Bo‘sh")
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  cameras      Camera[]
+  liveSessions LiveSession[]
+}
+
+model Camera {
+  id               String      @id @default(uuid())
+  roomId           String?
+  room             Room?       @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  name             String
+  roomNumber       String
+  floor            Int         @default(1)
+  state            CameraState @default(ONLINE)
+  resolution       String      @default("1080p")
+  fps              Int         @default(30)
+  cameraType       String      @default("PTZ")
+  recordingEnabled Boolean     @default(true)
+  rtspUrl          String?
+  currentActivity  String?
+  currentProfessor String?
+  patientCode      String?
+  startedAt        String?
+  lastActivity     String?
+  thumbnailUrl     String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  liveSessions     LiveSession[]
+}
+
+model LiveSession {
+  id                  String      @id @default(uuid())
+  cameraId            String?
+  camera              Camera?     @relation(fields: [cameraId], references: [id], onDelete: SetNull)
+  roomId              String?
+  room                Room?       @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  roomNumber          String
+  title               String
+  activityType        String
+  psychologicalMethod String
+  professorName       String
+  professorAvatar     String
+  professorTitle      String
+  patientCode         String
+  startedAt           String
+  viewerCount         Int         @default(0)
+  description         String
+  sessionObjectives   String[]    @default([])
+  cameraState         CameraState @default(LIVE)
+  relatedCaseId       String?
+  createdAt           DateTime    @default(now())
+}
+
+model Video {
+  id                   String           @id @default(uuid())
+  userId               String?
+  user                 User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  title                String
+  description          String
+  thumbnailUrl         String
+  videoUrl             String?
+  duration             String           @default("00:00")
+  activityType         String
+  method               String
+  professor            String
+  professorTitle       String
+  professorAvatar      String
+  department           String
+  recordedDate         String
+  viewCount            Int              @default(0)
+  status               VideoState       @default(PUBLISHED)
+  patientCode          String?
+  educationalObjective String?
+  supervisorComment    String?
+  relatedMaterialIds   String[]         @default([])
+  relatedCaseId        String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  appliedMethods       VideoTimestamp[]
+  reviewLogs           ReviewLog[]
+}
+
+model VideoTimestamp {
+  id          String   @id @default(uuid())
+  videoId     String
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  timestamp   String
+  seconds     Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Material {
+  id             String    @id @default(uuid())
+  userId         String?
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  title          String
+  description    String
+  fileType       String    @default("pdf")
+  fileSize       String    @default("1.0 MB")
+  fileUrl        String?
+  author         String
+  authorTitle    String
+  department     String
+  category       String    @default("Metodik qo‘llanma")
+  pagesCount     Int       @default(1)
+  downloadCount  Int       @default(0)
+  status         String    @default("Published")
+  summary        String?
+  subject        String?
+  tags           String[]  @default([])
+  tableOfContents String[] @default([])
+  relatedVideoIds String[] @default([])
+  relatedCaseIds  String[] @default([])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model CaseStudy {
+  id                  String         @id @default(uuid())
+  caseNumber          String         @unique
+  patientCode         String
+  title               String
+  topic               String
+  ageGroup            String
+  method              String
+  difficulty          CaseDifficulty @default(INTERMEDIATE)
+  presentingProblem   String
+  observedSymptoms    String[]       @default([])
+  approachDescription String
+  outcomeSummary      String
+  relatedVideoId      String?
+  relatedMaterialIds  String[]       @default([])
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+}
+
+model ReviewLog {
+  id             String     @id @default(uuid())
+  videoId        String
+  video          Video      @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  supervisorId   String?
+  supervisor     User?      @relation(fields: [supervisorId], references: [id], onDelete: SetNull)
+  supervisorName String
+  action         String
+  comment        String
+  createdAt      DateTime   @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("system")
+  time      String
+  isRead    Boolean  @default(false)
+  link      String   @default("")
+  createdAt DateTime @default(now())
+}

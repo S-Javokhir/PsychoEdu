@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -51,20 +52,20 @@ export const Modal: React.FC<ModalProps> = ({
     '4xl': 'max-w-4xl',
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      {/* Backdrop */}
+  const modalContent = (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto">
+      {/* Fullscreen Backdrop covering TopBar, Sidebar, and entire viewport */}
       <div
-        className="fixed inset-0 bg-text-main/40 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-[2px] transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Card */}
+      {/* Centered Modal Card */}
       <div
         className={twMerge(
           clsx(
-            'relative w-full bg-surface border border-border-ui rounded-modal shadow-elevated z-10 overflow-hidden my-8',
+            'relative w-full bg-surface border border-border-ui rounded-modal shadow-2xl z-10 overflow-hidden my-8 animate-page-enter',
             maxWidthClasses[maxWidth]
           )
         )}
@@ -89,7 +90,7 @@ export const Modal: React.FC<ModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="text-text-muted hover:text-text-main p-1 rounded-md hover:bg-sage-light transition-colors ml-4"
+              className="text-text-muted hover:text-text-main p-1 rounded-md hover:bg-sage-light transition-colors ml-4 cursor-pointer"
               aria-label="Yopish"
             >
               <X className="w-5 h-5" />
@@ -111,4 +112,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };

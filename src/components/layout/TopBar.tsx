@@ -18,7 +18,7 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ onToggleMobileMenu }) => {
   const navigate = useNavigate();
-  const { currentUser, role, logout, loginAs } = useAuth();
+  const { currentUser, role, logout } = useAuth();
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,70 +142,6 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleMobileMenu }) => {
                       <span>Tizim sozlamalari</span>
                     </button>
                   )}
-                </div>
-
-                {/* Quick Role Switcher Buttons */}
-                <div className="py-1.5">
-                  <p className="px-3 text-[10px] font-semibold tracking-wider text-text-soft uppercase mb-1">
-                    Rolni almashtirish (Demo):
-                  </p>
-                  <div className="grid grid-cols-2 gap-1 px-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        loginAs('student');
-                        setIsUserMenuOpen(false);
-                        navigate('/dashboard');
-                      }}
-                      className={`px-2 py-1.5 text-[11px] rounded text-left font-medium transition-colors ${
-                        role === 'student' ? 'bg-deep-teal text-white font-bold' : 'hover:bg-sage-light text-text-main'
-                      }`}
-                    >
-                      Talaba
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        loginAs('professor_psychologist');
-                        setIsUserMenuOpen(false);
-                        navigate('/dashboard');
-                      }}
-                      className={`px-2 py-1.5 text-[11px] rounded text-left font-medium transition-colors ${
-                        role === 'professor_psychologist' ? 'bg-deep-teal text-white font-bold' : 'hover:bg-sage-light text-text-main'
-                      }`}
-                    >
-                      Professor
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        loginAs('supervisor');
-                        setIsUserMenuOpen(false);
-                        navigate('/dashboard');
-                      }}
-                      className={`px-2 py-1.5 text-[11px] rounded text-left font-medium transition-colors ${
-                        role === 'supervisor' ? 'bg-deep-teal text-white font-bold' : 'hover:bg-sage-light text-text-main'
-                      }`}
-                    >
-                      Supervisor
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        loginAs('admin');
-                        setIsUserMenuOpen(false);
-                        navigate('/dashboard');
-                      }}
-                      className={`px-2 py-1.5 text-[11px] rounded text-left font-medium transition-colors ${
-                        role === 'admin' ? 'bg-deep-teal text-white font-bold' : 'hover:bg-sage-light text-text-main'
-                      }`}
-                    >
-                      Admin
-                    </button>
-                  </div>
                 </div>
 
                 <div className="pt-1">

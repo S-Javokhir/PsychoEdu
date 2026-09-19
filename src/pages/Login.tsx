@@ -5,72 +5,59 @@ import {
   ArrowLeft, 
   Eye, 
   EyeOff, 
-  User, 
-  BookOpen, 
-  CheckCircle2, 
-  Settings,
-  HelpCircle
+  HelpCircle,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import type { UserRole } from '../types';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginAs } = useAuth();
+  const { loginWithCredentials } = useAuth();
 
-  const [selectedRole, setSelectedRole] = useState<UserRole>('student');
-  const [email, setEmail] = useState('madina.usmonova@psychoedu.uz');
-  const [password, setPassword] = useState('••••••••');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const roleProfiles: Record<UserRole, { name: string; email: string; title: string }> = {
-    student: {
-      name: 'Madina Usmonova',
-      email: 'madina.usmonova@psychoedu.uz',
-      title: 'Talaba',
-    },
-    professor_psychologist: {
-      name: 'Prof. Dilorom Karimova',
-      email: 'dilorom.karimova@psychoedu.uz',
-      title: 'Professor',
-    },
-    supervisor: {
-      name: 'Dr. Nigora Toirova',
-      email: 'nigora.toirova@psychoedu.uz',
-      title: 'Supervisor',
-    },
-    admin: {
-      name: 'Azamat Shokirov',
-      email: 'azamat.admin@psychoedu.uz',
-      title: 'Admin',
-    },
-  };
-
-  const handleRoleSelect = (role: UserRole) => {
-    setSelectedRole(role);
-    setEmail(roleProfiles[role].email);
-  };
-
-  const handleQuickLogin = (role: UserRole) => {
-    loginAs(role);
-    const targetPath = (location.state as any)?.from?.pathname;
-    if (targetPath && targetPath !== '/login') {
-      navigate(targetPath);
-    } else {
-      if (role === 'supervisor') {
-        navigate('/supervisor/reviews');
-      } else if (role === 'admin') {
-        navigate('/admin/faculties');
-      } else {
-        navigate('/dashboard');
-      }
-    }
-  };
-
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    handleQuickLogin(selectedRole);
+    setError(null);
+
+    const cleanEmail = email.trim();
+    const cleanPass = password.trim();
+
+    if (!cleanEmail || !cleanPass) {
+      setError('Iltimos, elektron pochta va maxfiy parolni kiriting.');
+      return;
+    }
+
+    setLoading(true);
+    const res = await loginWithCredentials(cleanEmail, cleanPass);
+    setLoading(false);
+
+    if (!res.success) {
+      setError(res.error || 'Elektron pochta yoki maxfiy parol noto‘g‘ri.');
+      return;
+    }
+
+    // Role based navigation for successfully authenticated user
+    const userRole = res.user?.role;
+    let targetRoute = '/dashboard';
+    if (userRole === 'supervisor') {
+      targetRoute = '/supervisor/reviews';
+    } else if (userRole === 'admin') {
+      targetRoute = '/admin/faculties';
+    }
+
+    const redirectPath = (location.state as any)?.from?.pathname;
+    if (redirectPath && redirectPath !== '/login') {
+      navigate(redirectPath);
+    } else {
+      navigate(targetRoute);
+    }
   };
 
   return (
@@ -125,85 +112,17 @@ export const Login: React.FC = () => {
               PsychoEdu tizimiga kirish
             </h1>
             <p className="text-xs sm:text-sm text-gray-500 font-sans mt-1.5 font-light">
-              Amaliy psixologiya faoliyatingiz shu yerdan boshlanadi
+              Universitet psixologiya ta’lim platformasidagi hisobingizga kiring
             </p>
           </div>
 
-          {/* 4 Role Quick-Switching Buttons */}
-          <div className="grid grid-cols-4 gap-2.5 mb-5">
-            {/* Student Role */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('student')}
-              title="Talaba sifatida kirish"
-              className={`h-11 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                selectedRole === 'student'
-                  ? 'border-gray-900 bg-gray-50 text-gray-900 shadow-sm ring-1 ring-gray-900'
-                  : 'border-gray-200 hover:border-gray-400 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <User className="w-4 h-4" />
-            </button>
-
-            {/* Professor Role */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('professor_psychologist')}
-              title="Professor / Psixolog sifatida kirish"
-              className={`h-11 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                selectedRole === 'professor_psychologist'
-                  ? 'border-gray-900 bg-gray-50 text-gray-900 shadow-sm ring-1 ring-gray-900'
-                  : 'border-gray-200 hover:border-gray-400 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <BookOpen className="w-4 h-4" />
-            </button>
-
-            {/* Supervisor Role */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('supervisor')}
-              title="Supervisor sifatida kirish"
-              className={`h-11 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                selectedRole === 'supervisor'
-                  ? 'border-gray-900 bg-gray-50 text-gray-900 shadow-sm ring-1 ring-gray-900'
-                  : 'border-gray-200 hover:border-gray-400 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <CheckCircle2 className="w-4 h-4" />
-            </button>
-
-            {/* Admin Role */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('admin')}
-              title="Administrator sifatida kirish"
-              className={`h-11 rounded-xl border flex items-center justify-center transition-all cursor-pointer ${
-                selectedRole === 'admin'
-                  ? 'border-gray-900 bg-gray-50 text-gray-900 shadow-sm ring-1 ring-gray-900'
-                  : 'border-gray-200 hover:border-gray-400 bg-white text-gray-600 hover:bg-gray-50'
-              }`}
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Active Role Label */}
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-4 px-1">
-            <span>Tanlangan profil:</span>
-            <span className="font-semibold text-gray-900 bg-gray-100 px-2.5 py-0.5 rounded-full">
-              {roleProfiles[selectedRole].title} ({roleProfiles[selectedRole].name.split(' ')[0]})
-            </span>
-          </div>
-
-          {/* Divider with 'yoki' */}
-          <div className="relative flex items-center justify-center my-4">
-            <div className="border-t border-gray-200 w-full" />
-            <span className="bg-white px-3 text-xs text-gray-400 font-sans font-light">
-              yoki
-            </span>
-            <div className="border-t border-gray-200 w-full" />
-          </div>
+          {/* Error alert with icon */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-start gap-2.5 animate-fade-in">
+              <AlertCircle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />
+              <span className="leading-relaxed">{error}</span>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -216,7 +135,7 @@ export const Login: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nomi@psychoedu.uz"
+                placeholder="masalan: madina.usmonova@psychoedu.uz"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-sm text-gray-900 placeholder-gray-400 bg-white transition-all outline-none"
                 required
               />
@@ -232,7 +151,7 @@ export const Login: React.FC = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Parol"
+                  placeholder="Parolni kiriting"
                   className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-sm text-gray-900 placeholder-gray-400 bg-white transition-all outline-none font-mono"
                   required
                 />
@@ -251,9 +170,11 @@ export const Login: React.FC = () => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-[#182321] hover:bg-[#253733] text-white font-sans font-medium text-sm py-3 rounded-xl shadow-sm transition-all duration-150 active:scale-[0.98] cursor-pointer"
+                disabled={loading}
+                className="w-full bg-[#182321] hover:bg-[#253733] disabled:opacity-70 text-white font-sans font-medium text-sm py-3 rounded-xl shadow-sm transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
               >
-                Platformaga kirish
+                {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                <span>{loading ? 'Tekshirilmoqda...' : 'Platformaga kirish'}</span>
               </button>
             </div>
           </form>
@@ -263,7 +184,7 @@ export const Login: React.FC = () => {
             <span>Profilingiz yo‘qmi? </span>
             <button
               type="button"
-              onClick={() => handleRoleSelect('student')}
+              onClick={() => navigate('/register')}
               className="font-semibold text-gray-900 hover:underline cursor-pointer"
             >
               Ro‘yxatdan o‘tish

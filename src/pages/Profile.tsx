@@ -5,7 +5,6 @@ import {
   GraduationCap, 
   Building, 
   Bookmark, 
-  RefreshCw, 
   LogOut, 
   FileText, 
   Video, 
@@ -27,7 +26,7 @@ import { VideoCard } from '../components/domain/VideoCard';
 import { CaseCard } from '../components/domain/CaseCard';
 
 export const Profile: React.FC = () => {
-  const { currentUser, role, switchRole, logout } = useAuth();
+  const { currentUser, role, logout } = useAuth();
   const { savedMaterialIds, savedCaseIds, savedVideoIds } = useBookmarks();
   const navigate = useNavigate();
 
@@ -51,14 +50,6 @@ export const Profile: React.FC = () => {
         breadcrumbs={[{ label: 'Profil' }]}
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              icon={<RefreshCw className="w-4 h-4 text-teal-600" />}
-              onClick={switchRole}
-            >
-              Rolni almashtirish (Demo)
-            </Button>
             <Button
               variant="outline"
               size="sm"

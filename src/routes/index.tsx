@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { AppShell } from '../components/layout/AppShell';
 import { LandingPage } from '../pages/marketing/LandingPage';
 import { Login } from '../pages/Login';
+import { Register } from '../pages/Register';
 import { DashboardDispatcher } from '../pages/DashboardDispatcher';
 import { LiveMonitoring } from '../pages/LiveMonitoring';
 import { LiveSessionDetail } from '../pages/LiveSessionDetail';
@@ -46,6 +47,7 @@ export const AppRoutes: React.FC = () => {
       {/* Public Marketing Homepage */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       {/* Authenticated Platform Shell */}
       <Route element={<AppShell />}>
